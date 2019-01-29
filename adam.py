@@ -18,14 +18,12 @@ def loss(Y, T):
 def gaussian(x, mu, sig):
     return 1./(np.sqrt(2.*pi)*sig)*torch.exp(-torch.pow((x - mu)/sig, 2.)/2)
 
-w_t =  torch.Tensor([30, 2])
+w_t =  torch.Tensor([10, 4.4])
 
+X_tmp = np.arange(-10.0, 20.0, 0.01)
 
-
-
-
-X = torch.rand(100)
-
+X = torch.Tensor(X_tmp)
+T = gaussian (X, w_t[0], w_t[1])
 
 
 T = gaussian (X, w_t[0], w_t[1])
@@ -33,11 +31,11 @@ T = gaussian (X, w_t[0], w_t[1])
 
 
 batch_size = 20
-step_count = 10000
+step_count = 100
 
 
-w_mu = 3.0
-w_sig = 6.0
+w_mu = -3.0
+w_sig = 2.0
 
 result_param =[]
 
@@ -59,10 +57,13 @@ for i in range(0,step_count):
     result.backward()
 
     print(result)
-    print(w_mu_t)
-    print(w_sig_t)
 
-    optimizer = torch.optim.SGD([w_mu_t,w_sig_t], lr=0.1)
+    if(i % 10 == 0):
+        result_param.append(result)
+    #print(w_mu_t)
+    #print(w_sig_t)
+
+    optimizer = torch.optim.Adam([w_mu_t,w_sig_t], lr=0.1)
     optimizer.step()
 
 

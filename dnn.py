@@ -33,7 +33,7 @@ T = gaussian (X, w_t[0], w_t[1])
 
 
 batch_size = 20
-step_count = 10000
+step_count = 100
 
 w_mu = torch.tensor(-3.0)
 w_sig = torch.tensor(2.0)
@@ -50,11 +50,11 @@ for i in range(0,step_count):
     w_sig_t =  torch.tensor(w_sig.clone().detach(), requires_grad=True)
     #print(w_mu_t)
     #print(w_sig_t)
-    Y = 1./(np.sqrt(2.*pi)*w_sig_t)*torch.exp(-torch.pow((X[offset:offset+batch_size] - w_mu_t)/w_sig_t, 2.)/2)
+    Y = 1./(np.sqrt(2.*pi)*w_sig_t)*torch.exp(-torch.pow((X- w_mu_t)/w_sig_t, 2.)/2)
     #print(Y)
 
 
-    result = loss(Y,T[offset:offset+batch_size])
+    result = loss(Y,T)
     result.backward()
     if(i % 10 == 0):
         result_param.append(result)
