@@ -31,7 +31,7 @@ T = gaussian (X, w_t[0], w_t[1])
 
 
 batch_size = 20
-step_count = 100
+step_count = 7000
 
 
 w_mu = -3.0
@@ -50,10 +50,10 @@ for i in range(0,step_count):
 
     offset = random.randint(1,90)
 
-    Y = 1./(np.sqrt(2.*pi)*w_sig_t)*torch.exp(-torch.pow((X[offset:offset+batch_size] - w_mu_t)/w_sig_t, 2.)/2)
+    Y = 1./(np.sqrt(2.*pi)*w_sig_t)*torch.exp(-torch.pow((X - w_mu_t)/w_sig_t, 2.)/2)
 
 
-    result = loss(Y,T[offset:offset+batch_size])
+    result = loss(Y,T)
     result.backward()
 
     print(result)
