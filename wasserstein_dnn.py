@@ -30,14 +30,17 @@ T = gaussian (X, w_t[0], w_t[1])
 
 
 batch_size = 20
-step_count = 200
+step_count = 100
 
 w_mu = torch.tensor(-3.0)
 w_sig = torch.tensor(2.0)
 
 result_param =[]
 
-alpha = 1.0
+alpha = 0.1
+
+w_mu_cul = 0
+w_sig_cul = 0
 
 for i in range(0,step_count):
 
@@ -59,14 +62,17 @@ for i in range(0,step_count):
         print(i)
         print(w_mu)
         print(w_sig)
+
+    w_mu_cul += w_mu_t.grad * w_mu_t.grad
+    w_sig_cul += w_sig_t.grad * w_sig_t.grad 
     #SGD 
-    #w_mu =  w_mu - alpha * w_mu_t.grad
-    #w_sig = w_sig - alpha * w_sig_t.grad
+    #w_mu =  w_mu - alpha * w_mu_t.grad / np.sqrt(w_mu_cul)
+    #w_sig = w_sig - alpha * w_sig_t.grad / np.sqrt(w_sig_cul)
     #print(w_mu_t.grad)
 
     #Wasserstein
-    w_mu = w_mu - alpha* w_mu_t.grad
-    w_sig = w_sig - alpha*1/(4*w_sig_t)* w_sig_t.grad
+    w_mu = w_mu - alpha* (4*w_sig_t)*w_mu_t.grad  #/ np.sqrt(w_mu_cul)
+    w_sig = w_sig - alpha* w_sig_t.grad #/ np.sqrt(w_sig_cul)
     #KL
     #w_mu = w_mu - alpha*1/(w_sig_t*w_sig_t)* w_mu_t.grad
     #w_sig = w_sig - alpha*2/(w_sig_t*w_sig_t)* w_sig_t.grad
