@@ -31,7 +31,7 @@ T = gaussian (X, w_t[0], w_t[1])
 
 
 batch_size = 20
-step_count = 7000
+step_count = 1000
 
 
 w_mu = -3.0
@@ -45,25 +45,26 @@ alpha = 0.1
 w_mu_t = torch.tensor(w_mu, requires_grad=True)
 w_sig_t =  torch.tensor(w_sig, requires_grad=True)
 
+optimizer = torch.optim.Adam([w_mu_t,w_sig_t], lr=0.1)
+
 
 for i in range(0,step_count):
 
     offset = random.randint(1,90)
-
+    optimizer.zero_grad()
     Y = 1./(np.sqrt(2.*pi)*w_sig_t)*torch.exp(-torch.pow((X - w_mu_t)/w_sig_t, 2.)/2)
 
 
     result = loss(Y,T)
     result.backward()
 
-    print(result)
+    #print(result)
 
     if(i % 10 == 0):
         result_param.append(result)
-    #print(w_mu_t)
-    #print(w_sig_t)
+    print(w_mu_t)
+    print(w_sig_t)
 
-    optimizer = torch.optim.Adam([w_mu_t,w_sig_t], lr=0.1)
     optimizer.step()
 
 

@@ -15,7 +15,7 @@ def loss(Y, T):
 def gaussian(x, mu, sig):
     return 1./(np.sqrt(2.*pi)*sig)*torch.exp(-torch.pow((x - mu)/sig, 2.)/2)
 
-w_t =  torch.Tensor([10, 4.4])
+w_t =  torch.Tensor([10, 10.4])
 
 count = 0
 
@@ -30,17 +30,17 @@ T = gaussian (X, w_t[0], w_t[1])
 
 
 batch_size = 20
-step_count = 100
+step_count = 200
 
 w_mu = torch.tensor(-3.0)
-w_sig = torch.tensor(2.0)
+w_sig = torch.tensor(1.0)
 
 result_param =[]
 
-alpha = 0.1
+alpha = 0.01
 
-w_mu_cul = 0
-w_sig_cul = 0
+w_mu_cul = 0.1
+w_sig_cul = 0.1
 
 for i in range(0,step_count):
 
@@ -66,16 +66,16 @@ for i in range(0,step_count):
     w_mu_cul += w_mu_t.grad * w_mu_t.grad
     w_sig_cul += w_sig_t.grad * w_sig_t.grad 
     #SGD 
-    #w_mu =  w_mu - alpha * w_mu_t.grad / np.sqrt(w_mu_cul)
-    #w_sig = w_sig - alpha * w_sig_t.grad / np.sqrt(w_sig_cul)
+    #w_mu =  w_mu - alpha * w_mu_t.grad #/ np.sqrt(w_mu_cul)
+    #w_sig = w_sig - alpha * w_sig_t.grad #/ np.sqrt(w_sig_cul)
     #print(w_mu_t.grad)
 
     #Wasserstein
-    w_mu = w_mu - alpha* (4*w_sig_t)*w_mu_t.grad  #/ np.sqrt(w_mu_cul)
-    w_sig = w_sig - alpha* w_sig_t.grad #/ np.sqrt(w_sig_cul)
+    #w_mu = w_mu - alpha* (4*w_sig_t)*w_mu_t.grad  #/ np.sqrt(w_mu_cul)
+    #w_sig = w_sig - alpha* w_sig_t.grad #/ np.sqrt(w_sig_cul)
     #KL
-    #w_mu = w_mu - alpha*1/(w_sig_t*w_sig_t)* w_mu_t.grad
-    #w_sig = w_sig - alpha*2/(w_sig_t*w_sig_t)* w_sig_t.grad
+    w_mu = w_mu - alpha*2*(w_sig_t*w_sig_t)* w_mu_t.grad
+    w_sig = w_sig - alpha*1*(w_sig_t*w_sig_t)* w_sig_t.grad
 
 
 
